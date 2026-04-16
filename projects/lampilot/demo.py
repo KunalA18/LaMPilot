@@ -20,7 +20,7 @@ warnings.simplefilter("ignore")
 
 parser = argparse.ArgumentParser(description="Demo script for running a single task with a configuration file")
 parser.add_argument('--config', type=str, required=True, help='Path to configuration JSON file')
-parser.add_argument('--model-name', type=str, default='gpt-3.5-turbo', help='Model name to use (default: gpt-3.5-turbo)')
+parser.add_argument('--model-name', type=str, default='qwen2.5-coder:1.5b', help='Model name to use (default: gpt-3.5-turbo)')
 parser.add_argument('--zero-shot', action='store_true', help='Use zero-shot mode (default: few-shot)')
 parser.add_argument('--no-window', action='store_true', help='Disable visualization window')
 parser.add_argument('--wait-time', type=float, default=1e-3, help='Wait time between steps')

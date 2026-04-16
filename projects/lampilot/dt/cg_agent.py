@@ -1,14 +1,16 @@
 import ast
 import re
 
+from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
-from langchain.prompts import SystemMessagePromptTemplate
-from langchain.schema import AIMessage, HumanMessage, SystemMessage, ChatMessage, BaseMessage
+from langchain_core.prompts.chat import SystemMessagePromptTemplate
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ChatMessage, BaseMessage
 from projects.lampilot.utils.io import load_prompt, load_apis
 
 
 class CodeGenerationAgent:
     llms = {
+        "qwen2.5-coder:1.5b": (ChatOllama, "qwen2.5-coder:1.5b"),
         "gpt-3.5-turbo": (ChatOpenAI, "gpt-3.5-turbo"),
         "gpt-4": (ChatOpenAI, "gpt-4"),
         "gpt-4-1106-preview": (ChatOpenAI, "gpt-4-1106-preview"),
@@ -16,7 +18,7 @@ class CodeGenerationAgent:
     }
 
     def __init__(self,
-                 model_name: str = "gpt-3.5-turbo",
+                 model_name: str = "qwen2.5-coder:1.5b",
                  temperature: float = 0.0,
                  request_timeout: int = 120,
                  zero_shot: bool = False,
@@ -24,16 +26,23 @@ class CodeGenerationAgent:
         if model_name not in self.llms:
             raise RuntimeError(f"Unknown model name: {model_name}")
 
-        llm, model = self.llms[model_name]
+        # llm, model = self.llms[model_name]
 
-        if llm is ChatOpenAI:
-            self.llm = ChatOpenAI(
-                model=model,
-                temperature=temperature,
-                request_timeout=request_timeout,
-            )
-        else:
-            raise RuntimeError("Unknown LLM")
+        # if llm is ChatOpenAI:
+        #     self.llm = ChatOpenAI(
+        #         model=model,
+        #         temperature=temperature,
+        #         request_timeout=request_timeout,
+        #     )
+        # else:
+        #     raise RuntimeError("Unknown LLM")
+        llm_cls, model = self.llms[model_name]
+
+        self.llm = llm_cls(
+            model=model,
+            temperature=temperature,
+            base_url="http://localhost:11434",
+        )
 
         self.zero_shot = zero_shot
 
@@ -122,6 +131,8 @@ class CodeGenerationAgent:
     def step(self):
         if isinstance(self.llm, ChatOpenAI):
             ai_message = self.llm(self.messages)
+        elif isinstance(self.llm, ChatOllama):
+            ai_message = self.llm.invoke(self.messages)
         else:
             raise RuntimeError("Unknown LLM")
 

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 import numpy as np
-from langchain.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 from highway_env.road.road import LaneIndex, Route
 from highway_env.utils import not_zero, wrap_to_pi
