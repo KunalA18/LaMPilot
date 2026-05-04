@@ -1,5 +1,5 @@
-from langchain.prompts import SystemMessagePromptTemplate
-from langchain.schema import HumanMessage, SystemMessage
+from langchain_core.prompts.chat import SystemMessagePromptTemplate
+from langchain_core.messages import HumanMessage, SystemMessage
 
 from projects.lampilot.utils.io import load_prompt, load_apis, load_primitives
 from .cg_agent import CodeGenerationAgent

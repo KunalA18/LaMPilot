@@ -4,7 +4,7 @@ import json
 import os
 
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain.schema import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_community.vectorstores import Chroma
 
 from projects.lampilot.utils.io import load_primitives, load_json, load_prompt
